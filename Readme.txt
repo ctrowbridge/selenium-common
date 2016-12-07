@@ -1,0 +1,1 @@
+Java library containing common Selenium classes.
