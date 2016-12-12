@@ -14,7 +14,8 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 /**
@@ -53,12 +54,13 @@ public abstract class BasePage {
 		}
 		return returnVal;
 	}
-	
+
 	/**
 	 * Check to see if a particular element is present as a child of the given
 	 * element.
 	 * 
-	 * @param inElement Parent element to search
+	 * @param inElement
+	 *            Parent element to search
 	 * @param selector
 	 * @return true if element is present, false if element is not present
 	 */
@@ -74,7 +76,7 @@ public abstract class BasePage {
 		}
 		return returnVal;
 	}
-	
+
 	/**
 	 * Shows all links on the current web page.
 	 */
@@ -125,7 +127,8 @@ public abstract class BasePage {
 	}
 
 	/**
-	 * Waits for a particular element to be visible
+	 * Waits for a particular element to be present.
+	 * TODO Change to Explicit of Fluent Wait
 	 * 
 	 * @param by
 	 * @throws InterruptedException
@@ -144,7 +147,18 @@ public abstract class BasePage {
 			System.out.println(" Try again " + second + " " + by);
 		}
 	}
-	
+
+	/**
+	 * Waits for a particular element to be visible
+	 * 
+	 * @param by
+	 */
+	public void waitForElementVisible(By by) {
+		WebDriverWait wait = new WebDriverWait(driver, defaultTimeout);
+		WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+
+	}
+
 	/**
 	 * Takes a screenshot of the current page and saves it to a file.
 	 * 
@@ -152,7 +166,7 @@ public abstract class BasePage {
 	 * @throws IOException
 	 */
 	public void takeScreenshot(String fileName) throws IOException {
-		File srcFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		FileUtils.copyFile(srcFile, new File(fileName));
 	}
 }
