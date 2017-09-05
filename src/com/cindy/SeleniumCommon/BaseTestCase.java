@@ -32,6 +32,8 @@ public class BaseTestCase {
 	protected String httpProxy = "";
 	protected String sslProxy = "";
 	protected String ftpProxy = "";
+	protected String proxyUserName = "";
+	protected String proxyPassword = "";
 
 	public enum DriverType {
 		FIREFOX, IE, CHROME
@@ -62,7 +64,7 @@ public class BaseTestCase {
 
 		switch (type) {
 		case IE:
-			file = new File(userProfile + "/Documents/Selenium/IEDriverServer_Win32_2.53.0/IEDriverServer.exe");
+			file = new File(userProfile + "/Documents/Selenium/IEDriverServer_Win32_3.2.0/IEDriverServer.exe");
 			System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
 
 			capabilities = DesiredCapabilities.internetExplorer();
@@ -72,21 +74,25 @@ public class BaseTestCase {
 			break;
 
 		case CHROME:
-			file = new File(userProfile + "/Documents/Selenium/chromedriver_win32/chromedriver.exe");
+			file = new File(userProfile + "/Documents/Selenium/chromedriver_win32_2_31/chromedriver.exe");
 			System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
 
 			capabilities = DesiredCapabilities.chrome();
-			addProxyCapabilities(capabilities);
+			//addProxyCapabilities(capabilities);
+			Proxy proxy = getProxyOptions();
+			capabilities.setCapability(CapabilityType.PROXY, proxy);
+			
 			ChromeOptions options = new ChromeOptions();
 			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 			options.addArguments("chrome.switches", "--disable-extensions");
+			options.addArguments("chrome.switches", "--disable-spdy-proxy-dev-auth-origin");
 
 			driver = new ChromeDriver(options);
 			break;
 
 		case FIREFOX:
-			System.setProperty("webdriver.gecko.driver", userProfile + 
-					"\\Documents\\Selenium\\geckodriver-v0.11.1-win64\\geckodriver.exe");
+			System.setProperty("webdriver.gecko.driver",
+					userProfile + "\\Documents\\Selenium\\geckodriver-v0.18.0-win32\\geckodriver.exe");
 
 			capabilities = DesiredCapabilities.firefox();
 			addProxyCapabilities(capabilities);
@@ -105,7 +111,8 @@ public class BaseTestCase {
 	/**
 	 * Opens a file used to log testing.
 	 * 
-	 * @param name Name of test
+	 * @param name
+	 *            Name of test
 	 * @throws FileNotFoundException
 	 */
 	public void createLog(String name) throws FileNotFoundException {
@@ -118,13 +125,12 @@ public class BaseTestCase {
 	}
 
 	/**
-	 * Adds something to log.
-	 * TODO Implement method
+	 * Adds something to log. TODO Implement method
 	 */
 	public void log() {
-		
+
 	}
-	
+
 	/**
 	 * Shuts down the driver.
 	 */
@@ -145,15 +151,21 @@ public class BaseTestCase {
 		this.sslProxy = sslProxy;
 		this.ftpProxy = ftpProxy;
 	}
+	
+	protected void setProxyLogin(String name, String password) {
+		proxyUserName = name;
+		proxyPassword = password;
+	}
 
 	/**
 	 * Add proxy parameters to capabilities list
 	 * 
-	 * @param capability  Current list of capabilities
+	 * @param capability
+	 *            Current list of capabilities
 	 * @return Updated listed of capabilities
 	 */
 	private DesiredCapabilities addProxyCapabilities(DesiredCapabilities capability) {
-		
+
 		if (httpProxy != "" || sslProxy != "" || ftpProxy != "") {
 			Proxy proxy = new Proxy();
 			proxy.setProxyType(ProxyType.MANUAL);
@@ -171,5 +183,22 @@ public class BaseTestCase {
 			capability.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
 		}
 		return capability;
+	}
+
+	private Proxy getProxyOptions() {
+		
+		if (httpProxy != "" || sslProxy != "" || ftpProxy != "") {
+
+			Proxy proxy = new org.openqa.selenium.Proxy();
+			proxy.setSslProxy(sslProxy);
+			proxy.setFtpProxy(ftpProxy);
+			proxy.setHttpProxy(httpProxy);
+			proxy.setSocksUsername(proxyUserName);
+			proxy.setSocksPassword(proxyPassword);
+
+			return null;
+		}
+
+		return null;
 	}
 }
