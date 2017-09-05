@@ -14,7 +14,9 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
@@ -65,6 +67,7 @@ public abstract class BasePage {
 	 * @return true if element is present, false if element is not present
 	 */
 	protected boolean isElementPresent(WebElement inElement, By selector) {
+		
 		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 		boolean returnVal = true;
 		try {
@@ -118,6 +121,7 @@ public abstract class BasePage {
 	 * @param element
 	 */
 	public void elementHighlight(WebElement element) {
+		
 		for (int i = 0; i < 2; i++) {
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("arguments[0].setAttribute('style', arguments[1]);", element,
@@ -168,5 +172,24 @@ public abstract class BasePage {
 	public void takeScreenshot(String fileName) throws IOException {
 		File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		FileUtils.copyFile(srcFile, new File(fileName));
+	}
+	
+	/**
+	 * Waits for the current page to be loaded
+	 */
+	public void waitForPageLoaded() {
+		
+		ExpectedCondition<Boolean> expectation = new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
+			}
+		};
+		
+		Wait<WebDriver> wait = new WebDriverWait(driver, 30);
+		try {
+			wait.until(expectation);
+		} catch (Throwable error) {
+			Assert.assertFalse(true, "Timeout waiting for Page Load Request to complete.");
+		}
 	}
 }
