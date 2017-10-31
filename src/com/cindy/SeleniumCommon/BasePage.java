@@ -20,6 +20,8 @@ import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptExecutor;
+
 /**
  * Implements a base object for all Page Objects for Selenium testing.
  * 
@@ -191,5 +193,17 @@ public abstract class BasePage {
 		} catch (Throwable error) {
 			Assert.assertFalse(true, "Timeout waiting for Page Load Request to complete.");
 		}
+	}
+	
+	protected void scrollToElement(WebElement element) {
+		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		jse.executeScript("arguments[0].scrollIntoView(true);", element);
+	}
+	
+	protected void scrollToTop() {
+		
+		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		jse.executeScript("window.scrollTo(0,0)");
+		
 	}
 }
