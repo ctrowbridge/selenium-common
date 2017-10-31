@@ -64,7 +64,7 @@ public class BaseTestCase {
 
 		switch (type) {
 		case IE:
-			file = new File(userProfile + "/Documents/Selenium/IEDriverServer_Win32_3.2.0/IEDriverServer.exe");
+			file = new File(userProfile + "/Documents/Selenium/IEDriverServer_Win32_3.4.0/IEDriverServer.exe");
 			System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
 
 			capabilities = DesiredCapabilities.internetExplorer();
@@ -74,7 +74,7 @@ public class BaseTestCase {
 			break;
 
 		case CHROME:
-			file = new File(userProfile + "/Documents/Selenium/chromedriver_win32_2_31/chromedriver.exe");
+			file = new File(userProfile + "/Documents/Selenium/chromedriver_win32_2_33/chromedriver.exe");
 			System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
 
 			capabilities = DesiredCapabilities.chrome();
@@ -92,7 +92,7 @@ public class BaseTestCase {
 
 		case FIREFOX:
 			System.setProperty("webdriver.gecko.driver",
-					userProfile + "\\Documents\\Selenium\\geckodriver-v0.18.0-win32\\geckodriver.exe");
+					userProfile + "\\Documents\\Selenium\\geckodriver-v0.19.0-win32\\geckodriver.exe");
 
 			capabilities = DesiredCapabilities.firefox();
 			addProxyCapabilities(capabilities);
@@ -135,7 +135,6 @@ public class BaseTestCase {
 	 * Shuts down the driver.
 	 */
 	public void shutdown() {
-		System.out.println("\nBaseTestCase::shutdown:  closing driver ...");
 		driver.quit();
 	}
 
