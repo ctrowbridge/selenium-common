@@ -74,7 +74,7 @@ public class BaseTestCase {
 			break;
 
 		case CHROME:
-			file = new File(userProfile + "/Documents/Selenium/chromedriver_win32_2_33/chromedriver.exe");
+			file = new File(userProfile + "/Documents/Selenium/chromedriver_win32_2_38/chromedriver.exe");
 			System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
 
 			capabilities = DesiredCapabilities.chrome();
