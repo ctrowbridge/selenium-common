@@ -22,7 +22,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 /**
  * Implements a base test case for Selenium testing.
  * 
- * @author Cindy
+ * @author Cindy Trowbridge
  *
  */
 public class BaseTestCase {
